@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TKOR 길드전 일정 초안</title>
+<style>
+:root{--bg:#090e18;--panel:#111827;--card:#172033;--line:#26344a;--text:#d9e1ee;--muted:#7f8ca1;--gold:#e7ba45;--gold2:#f2cb68;--highlight:#3c4f69;--highlight2:#526681}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#080d16,#0c1422 46%,#080d16);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}button,input{font:inherit}.wrap{max-width:1180px;margin:0 auto;padding:16px}.header{border:1px solid var(--line);background:rgba(17,24,39,.98);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:7px;align-items:center}
+.kicker{font-size:13px;color:var(--muted);grid-column:1;grid-row:1}
+h1{font-size:25px;margin:0;white-space:nowrap;grid-column:1;grid-row:2;min-width:0}
+.clock{font-size:14px;color:var(--muted);text-align:right;line-height:1.45;white-space:nowrap;grid-column:2;grid-row:1}
+.top-action{grid-column:2;grid-row:2;justify-self:end}.section{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:15px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.section-title h2{font-size:21px;margin:0}.small{font-size:13px;color:var(--muted);line-height:1.45}.badge{font-size:12px;font-weight:800;border-radius:999px;padding:4px 8px;background:#1b2638;color:#eaf1ff;white-space:nowrap}.grid-top{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:14px}.homework-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.hw,.task,.event,.surv{border:1px solid var(--line);background:var(--card);border-radius:12px}.hw{min-height:50px;padding:7px 10px;display:flex;gap:9px;align-items:center}.hw input,.task input,.event input,.surv input{width:21px;height:21px;accent-color:var(--gold);flex:0 0 auto;margin-top:1px}.hw-title,.task-title{font-weight:800;font-size:15px;line-height:1.34}.sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.38}.done{opacity:.5}.done .hw-title,.done .task-title{text-decoration:line-through}.progress{height:7px;background:#243147;border-radius:999px;overflow:hidden;margin:9px 0 0}.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#e2b844,var(--gold2))}.today-events{display:flex;flex-direction:column;gap:8px}.event{padding:10px;display:grid;grid-template-columns:62px minmax(0,1fr) 28px;align-items:center;gap:9px}.event .time{font-weight:900;font-size:15px;color:var(--gold2)}.event.next{outline:2px solid var(--gold);outline-offset:-2px}.event.past{opacity:.55}.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:12px}.daybtn{min-height:42px;border:1px solid var(--line);background:#141d2d;color:var(--text);border-radius:10px;font-weight:800}.daybtn.active{background:#1d2b42;border-color:var(--gold2);box-shadow:inset 0 0 0 1px var(--gold2)}.daybtn.today::after{content:" •";color:var(--gold2)}.dual{display:grid;grid-template-columns:1fr 1fr;gap:12px}.task-list,.surv-list{display:flex;flex-direction:column;gap:7px}.task{padding:9px 10px;display:flex;align-items:center;gap:9px;min-height:50px}.task .grow{min-width:0;flex:1}.linked{border-color:#526783}.surv{padding:9px 10px;display:grid;grid-template-columns:88px minmax(0,1fr) 28px;gap:8px;align-items:center;min-height:54px}.surv.overlap{background:linear-gradient(90deg,rgba(60,79,105,.92),rgba(42,56,77,.97));border-color:#647895}.surv.current{outline:2px solid var(--gold2);outline-offset:-2px}.surv .stime{font-size:14px;font-weight:900}.note{margin-top:10px;padding:10px;border:1px dashed #314158;border-radius:10px;color:var(--muted);font-size:13px;line-height:1.55}.event-actions{display:flex;align-items:center;gap:6px}.reset-events{border:1px solid var(--line);background:#141d2d;color:var(--text);border-radius:9px;min-height:32px;padding:0 9px;font-weight:800;font-size:11px;white-space:nowrap}.reset-events:active{transform:translateY(1px)}.shield-task{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 10px}.shield-inline{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}.shield-inline-time{font-size:17px;font-weight:900;color:var(--gold2);font-variant-numeric:tabular-nums;letter-spacing:.3px;white-space:nowrap}.shield-btn{border:1px solid #526783;background:#141d2d;color:#d9e1ee;border-radius:9px;min-height:34px;padding:0 9px;font-weight:800;font-size:12px;white-space:nowrap}.shield-box{grid-column:1/-1;width:100%;margin-top:2px;padding:10px;border:1px solid #40506b;border-radius:10px;background:#0f1726}.shield-box-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.shield-close{border:0;background:transparent;color:var(--muted);font-size:18px;line-height:1;padding:4px 6px}.shield-actions{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:7px;margin-top:8px}.choice,.start,.reset{min-height:40px;border-radius:9px;border:1px solid var(--line);background:#141d2d;color:var(--text);font-weight:800}.choice.on{border-color:var(--gold2);background:#263854}.start{background:var(--gold);border-color:var(--gold2);color:#101522}.shield-meta{margin-top:8px}.footer-note{font-size:12px;color:#7f8da3;margin:14px 2px 4px;text-align:center}
+@media(max-width:900px){.grid-top,.dual{grid-template-columns:1fr}.homework-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.wrap{padding:10px}.header{align-items:flex-start}.header-row{gap:8px}.clock{font-size:12px}.homework-grid{grid-template-columns:1fr;gap:5px}.hw{min-height:44px;padding:6px 8px}.section{padding:11px}.days{gap:4px}.daybtn{min-height:42px;font-size:14px}.event{grid-template-columns:54px minmax(0,1fr) 26px}.surv{grid-template-columns:80px minmax(0,1fr) 26px}}
+
+.top-action{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 12px;border:1px solid #445774;border-radius:999px;background:linear-gradient(180deg,#182336,#111a2a);color:#e6edf9;text-decoration:none;font-size:13px;font-weight:900;box-shadow:0 3px 10px rgba(0,0,0,.22)}
+.top-action:active{transform:translateY(1px)}
+.notice-shell{display:block;margin-top:10px;position:relative;overflow:hidden;border-radius:16px;border:1px solid #5c74a0;background:linear-gradient(135deg,#1a2540,#142036 48%,#101a2d);padding:12px 14px;box-shadow:0 0 0 1px rgba(255,214,102,.08) inset,0 10px 26px rgba(0,0,0,.28)}
+.notice-shell.show{display:block}
+.notice-shell::before{content:'';position:absolute;inset:-40% auto auto -15%;width:55%;height:220%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.14),rgba(255,255,255,0));transform:rotate(18deg);animation:shine 4.6s linear infinite}
+.notice-shell::after{content:'';position:absolute;inset:0;border-radius:16px;pointer-events:none;box-shadow:0 0 0 1px rgba(255,210,90,.18) inset,0 0 22px rgba(94,123,186,.18) inset}
+.notice-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;position:relative;z-index:1}
+.notice-badge{display:inline-flex;align-items:center;justify-content:center;padding:0 10px;min-height:26px;border-radius:999px;background:linear-gradient(90deg,#ffd45d,#f5b83e);color:#221607;font-size:11px;font-weight:900;letter-spacing:.4px;box-shadow:0 4px 12px rgba(243,195,79,.28)}
+.notice-stars{font-size:14px;letter-spacing:2px;opacity:.95}
+.notice-track{position:relative;z-index:1;border:1px solid rgba(108,129,171,.38);background:rgba(10,17,30,.42);border-radius:12px;padding:9px 0;overflow:hidden}
+.notice-marquee{display:inline-block;white-space:nowrap;padding-left:100%;font-size:16px;font-weight:900;line-height:1.3;color:#f6f8fc;text-shadow:0 0 10px rgba(255,214,102,.18);animation:marquee 18s linear infinite}
+.notice-marquee.paused{animation:none;padding-left:14px}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+@keyframes shine{0%{transform:translateX(-25%) rotate(18deg)}100%{transform:translateX(240%) rotate(18deg)}}
+@media(max-width:520px){.header{padding:15px 14px;column-gap:8px;row-gap:7px}h1{font-size:22px}.clock{font-size:12px}.top-action{min-height:30px;padding:0 9px;font-size:11px;white-space:nowrap}.notice-shell{padding:10px 11px}.notice-badge{min-height:24px;font-size:10px;padding:0 8px}.notice-stars{font-size:12px}.notice-track{padding:8px 0}.notice-marquee{font-size:14px}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="kicker">TKOR 길드원용 · 개인 체크</div>
+    <div class="clock" id="clockText"></div>
+    <h1 id="dateTitle">오늘 일정</h1>
+    <a class="top-action" href="https://docs.google.com/forms/d/e/1FAIpQLSfgIZeRQK0quuHZNal2X4hUEjP-xjF03C3t0YV1K1dmmWKpaQ/viewform?usp=publish-editor" target="_blank" rel="noopener">💬 건의 · 축하 제보</a>
+  </div>
+  <div class="notice-shell" id="noticeBar">
+    <div class="notice-head">
+      <span class="notice-badge">TKOR 전광판</span>
+      <span class="notice-stars">✨ ✦ ✨</span>
+    </div>
+    <div class="notice-track">
+      <div class="notice-marquee paused" id="noticeText">📢 등록된 전광판 소식이 없습니다</div>
+    </div>
+  </div>
+  <div class="grid-top">
+    <section class="section"><div class="section-title"><div><h2>✅ 오늘의 숙제</h2><div class="small" id="homeworkDay"></div></div><span class="badge" id="homeworkScore">0/7</span></div><div class="progress"><span id="homeworkBar"></span></div><div class="homework-grid" id="homeworkGrid" style="margin-top:11px"></div></section>
+    <section class="section"><div class="section-title"><div><h2>📅 오늘 일정</h2></div><div class="event-actions"><button class="reset-events" type="button" id="resetTodayEvents">↺ 초기화</button><span class="badge" id="eventCount">0개</span></div></div><div class="today-events" id="todayEvents"></div></section>
+  </div>
+  <section class="section" style="margin-top:14px"><div class="section-title"><div><h2>⚔️ 길드전 · 서바이벌 배틀</h2></div><button class="shield-btn" type="button" id="goToday">오늘 보기</button></div><div class="days" id="dayTabs"></div><div class="dual"><div><div class="section-title" style="margin-bottom:8px"><strong id="guildTitle">길드전</strong><span class="badge" id="guildProgress"></span></div><div class="task-list" id="guildTasks"></div><div class="note" id="guildNote"></div></div><div><div class="section-title" style="margin-bottom:8px"><strong>서바이벌 배틀</strong></div><div class="surv-list" id="survivalRows"></div></div></div></section>
+  <div class="footer-note">체크 상태는 이 기기 브라우저에 저장됩니다. 길드전/숙제는 매일 UTC 02:00 (한국 11:00)에 자동 초기화됩니다.</div>
+</div>
+<script>
+(()=>{
+const $=s=>document.querySelector(s),DAY=['일','월','화','수','목','금','토'];
+const guild={0:{name:'일요일',tasks:[],surv:[['11:00~15:00','영지 건설',0],['15:00~19:00','병사 훈련',0],['19:00~23:00','기술 연구',0],['23:00~03:00','까마귀 강화',0],['03:00~07:00','영웅 강화',0],['07:00~11:00','영지 건설',0]],note:'길드전 없음 · 내일을 위한 준비: 팔콘타워 모으기.'},1:{name:'월요일',tasks:[{id:'antidote',n:'항독소 소모 · 영웅 레벨업'},{id:'stamina',n:'체력 소모'},{id:'falcon',n:'팔콘타워 완료하기',link:'falcon'},{id:'gather',n:'채집 · 식량/목재/약재'},{id:'raven',n:'까마귀 레벨업 · 열매/정수'},{id:'rune',n:'룬 보물상자 오픈'}],surv:[['11:00~15:00','영웅 강화',1],['15:00~19:00','영지 건설',0],['19:00~23:00','병사 훈련',0],['23:00~03:00','기술 연구',0],['03:00~07:00','까마귀 강화',1],['07:00~11:00','영웅 강화',1]],note:'시간 맞춰야 함: 강조된 서바이벌 배틀 시간대를 활용하면 길드전과 같이 진행할 수 있어요.'},2:{name:'화요일',tasks:[{id:'build',n:'건설 가속 / 건설 완료'},{id:'urcombo',n:'UR 비밀퀘스트 수행 · UR 마차 파견하기',link:'urcombo'},{id:'recruit',n:'생존자 모집'}],surv:[['11:00~15:00','영지 건설',1],['15:00~19:00','병사 훈련',0],['19:00~23:00','기술 연구',0],['23:00~03:00','까마귀 강화',0],['03:00~07:00','영웅 강화',0],['07:00~11:00','영지 건설',1]],note:'내일을 위한 준비: 팔콘타워 임무는 완료 후 빨간점 상태로 모아두기.'},3:{name:'수요일',tasks:[{id:'falcon',n:'팔콘타워 완료하기',link:'falcon'},{id:'scroll',n:'연구 두루마리 사용'},{id:'research',n:'연구 가속 / 연구 완료'},{id:'rune',n:'까마귀 보물상자 오픈'}],surv:[['11:00~15:00','병사 훈련',0],['15:00~19:00','기술 연구',1],['19:00~23:00','까마귀 강화',0],['23:00~03:00','영웅 강화',0],['03:00~07:00','영지 건설',0],['07:00~11:00','병사 훈련',0]],note:'시간 맞춰야 함: 15:00~19:00 기술 연구가 길드전과 겹쳐요.'},4:{name:'목요일',tasks:[{id:'antidote',n:'항독소 사용 · 영웅 레벨업'},{id:'heroRecruit',n:'영웅 모집'},{id:'heroFrag',n:'영웅 조각 사용'},{id:'heroStar',n:'영웅 승급'},{id:'skill',n:'스킬 배지 사용'}],surv:[['11:00~15:00','기술 연구',0],['15:00~19:00','까마귀 강화',0],['19:00~23:00','영웅 강화',1],['23:00~03:00','영지 건설',0],['03:00~07:00','병사 훈련',0],['07:00~11:00','기술 연구',0]],note:'내일을 위한 준비: 팔콘타워 임무는 완료 후 빨간점 상태로 모아두기.'},5:{name:'금요일',tasks:[{id:'falcon',n:'팔콘타워 완료하기',link:'falcon'},{id:'build',n:'건설 가속 / 건설 완료'},{id:'train',n:'병사 훈련 가속 / 병사 훈련'},{id:'research',n:'연구 가속 / 연구 완료'}],surv:[['11:00~15:00','까마귀 강화',0],['15:00~19:00','영웅 강화',0],['19:00~23:00','영지 건설',1],['23:00~03:00','병사 훈련',1],['03:00~07:00','기술 연구',1],['07:00~11:00','까마귀 강화',0]],note:'시간 맞춰야 함: 19:00 건설 → 23:00 병사 훈련 → 03:00 연구.'},6:{name:'토요일',tasks:[{id:'shield',n:'보호막 필수',shield:true},{id:'kill',n:'병사 처치 및 전사'},{id:'urcombo',n:'UR 비밀퀘스트 수행 · UR 마차 파견하기',link:'urcombo'},{id:'heal',n:'치료 가속 사용'},{id:'buildSpeed',n:'건물 가속 사용 · 완료 X'},{id:'trainSpeed',n:'병사 가속 사용'},{id:'researchSpeed',n:'연구 가속 사용'}],surv:[['11:00~15:00','영웅 강화',0],['15:00~19:00','영지 건설',1],['19:00~23:00','병사 훈련',1],['23:00~03:00','기술 연구',1],['03:00~07:00','까마귀 강화',0],['07:00~11:00','영웅 강화',0]],note:'보호막 필수 · 보호막 옆 ⏱ 설정에서 8시간 또는 12시간 타이머를 시작할 수 있어요.'}};
+const S={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function kst(){return new Date(Date.now()+9*3600000)}function gameInfo(){const g=new Date(Date.now()-2*3600000);return{day:g.getUTCDay(),key:`${g.getUTCFullYear()}-${String(g.getUTCMonth()+1).padStart(2,'0')}-${String(g.getUTCDate()).padStart(2,'0')}`}}function calInfo(){const d=kst();return{y:d.getUTCFullYear(),m:d.getUTCMonth(),d:d.getUTCDate(),day:d.getUTCDay(),h:d.getUTCHours(),min:d.getUTCMinutes()}}function daily(){const gi=gameInfo(),all=S.get('tkorDaily',{});if(!all[gi.key])all[gi.key]={hw:{},guild:{},surv:{}};S.set('tkorDaily',all);return{all,s:all[gi.key],gi}}function hwItems(day){const falcon=day===6?'팔콘타워 완료하기':([1,3,5].includes(day)?'팔콘타워 완료하기':'팔콘타워 모으기'),ur=[2,6].includes(day);return[{id:'notice',n:'공지 확인하기'},{id:'falcon',n:falcon,link:[1,3,5].includes(day)?'falcon':null},{id:'raidWagon',n:'마차 약탈하기',sub:'약탈 서버는 공지 참고'},{id:'dispatch',n:ur?'UR 마차 파견하기':'마차 파견하기',link:ur?'urpart':null},{id:'secretDo',n:ur?'UR 비밀퀘스트 수행':'비밀퀘스트 수행',link:ur?'urpart':null},{id:'secretRaid',n:'비밀퀘스트 약탈하기',sub:'15:00에 많이 등장'},{id:'boss',n:'마왕보스 잡기'}]}function sync(s,day,id,checked){if(id==='falcon'&&[1,3,5].includes(day)){s.hw.falcon=checked;s.guild.falcon=checked}if(id==='urcombo'&&[2,6].includes(day)){s.guild.urcombo=checked;s.hw.dispatch=checked;s.hw.secretDo=checked}if((id==='dispatch'||id==='secretDo')&&[2,6].includes(day)){s.hw[id]=checked;s.guild.urcombo=!!s.hw.dispatch&&!!s.hw.secretDo}}
+let selectedDay=gameInfo().day;function renderHeader(){const c=calInfo();$('#dateTitle').textContent=`${c.m+1}월 ${c.d}일 ${DAY[c.day]}요일`;$('#clockText').innerHTML=`현재 한국시간 <b>${String(c.h).padStart(2,'0')}:${String(c.min).padStart(2,'0')}</b>`}function renderHomework(){const{all,s,gi}=daily(),items=hwItems(gi.day),box=$('#homeworkGrid');box.innerHTML='';let done=0;items.forEach(it=>{if(s.hw[it.id])done++;const lab=document.createElement('label');lab.className='hw'+(s.hw[it.id]?' done':'');const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!s.hw[it.id];cb.addEventListener('change',()=>{if(it.link==='falcon')sync(s,gi.day,'falcon',cb.checked);else if(it.link==='urpart')sync(s,gi.day,it.id,cb.checked);else s.hw[it.id]=cb.checked;S.set('tkorDaily',all);renderHomework();renderGuild()});const tx=document.createElement('div');tx.innerHTML=`<div class="hw-title">${it.n}</div>${it.sub?`<div class="sub">${it.sub}</div>`:''}`;lab.append(cb,tx);box.appendChild(lab)});$('#homeworkDay').textContent=`${guild[gi.day].name} · 매일 11:00 초기화`;$('#homeworkScore').textContent=`${done}/7`;$('#homeworkBar').style.width=`${done/7*100}%`}
+function currentSlot(){const c=calInfo(),m=c.h*60+c.min;if(m>=660&&m<900)return 0;if(m>=900&&m<1140)return 1;if(m>=1140&&m<1380)return 2;if(m>=1380||m<180)return 3;if(m>=180&&m<420)return 4;return 5}function renderDays(){const gi=gameInfo(),box=$('#dayTabs');box.innerHTML='';for(let d=0;d<7;d++){const b=document.createElement('button');b.type='button';b.className='daybtn'+(d===selectedDay?' active':'')+(d===gi.day?' today':'');b.textContent=DAY[d];b.addEventListener('click',()=>{selectedDay=d;renderDays();renderGuild()});box.appendChild(b)}}
+function shieldData(){return S.get('tkorShield',null)}function shieldHTML(){const d=shieldData(),active=d&&d.end>Date.now();return `<div class="shield-inline"><span class="shield-inline-time" data-shield-inline-time style="${active?'':'display:none'}">--:--:--</span><button class="shield-btn" type="button" data-shield-open>${active?'변경':'⏱ 설정'}</button></div><div class="shield-box" data-shield-box style="display:none"><div class="shield-box-head"><div class="small">보호막 시간 선택</div><button type="button" class="shield-close" data-shield-close aria-label="닫기">✕</button></div><div class="shield-actions"><button type="button" class="choice on" data-hours="8">8시간</button><button type="button" class="choice" data-hours="12">12시간</button><button type="button" class="start" data-shield-start>보호막 시작</button></div><div class="shield-meta"><div class="sub" data-shield-end></div><button type="button" class="reset" data-shield-reset style="${active?'width:100%;margin-top:7px':'display:none'}">타이머 초기화</button></div></div>`}function bindShield(row){let hours=8;const open=row.querySelector('[data-shield-open]'),box=row.querySelector('[data-shield-box]'),close=row.querySelector('[data-shield-close]');if(!open)return;const setOpen=v=>{box.style.display=v?'block':'none';open.style.display=v?'none':''};open.addEventListener('click',()=>setOpen(true));if(close)close.addEventListener('click',()=>setOpen(false));row.querySelectorAll('[data-hours]').forEach(b=>b.addEventListener('click',()=>{hours=Number(b.dataset.hours);row.querySelectorAll('[data-hours]').forEach(x=>x.classList.toggle('on',x===b))}));row.querySelector('[data-shield-start]').addEventListener('click',()=>{S.set('tkorShield',{end:Date.now()+hours*3600000,hours});setOpen(false);updateShield()});const r=row.querySelector('[data-shield-reset]');if(r)r.addEventListener('click',()=>{S.set('tkorShield',null);setOpen(false);updateShield()})}function updateShield(){document.querySelectorAll('.shield-task').forEach(row=>{const d=shieldData(),tm=row.querySelector('[data-shield-inline-time]'),en=row.querySelector('[data-shield-end]'),open=row.querySelector('[data-shield-open]'),reset=row.querySelector('[data-shield-reset]');if(!tm||!open)return;if(!d){tm.style.display='none';open.textContent='⏱ 설정';if(en)en.textContent='';if(reset)reset.style.display='none';return}const left=d.end-Date.now();tm.style.display='';if(left<=0){tm.textContent='갱신 필요';open.textContent='설정';if(en)en.textContent='보호막 시간이 끝났어요.';if(reset)reset.style.cssText='width:100%;margin-top:7px';return}const sec=Math.floor(left/1000),h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;tm.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;open.textContent='변경';const e=new Date(d.end+9*3600000);if(en)en.textContent=`다음 갱신 ${String(e.getUTCHours()).padStart(2,'0')}:${String(e.getUTCMinutes()).padStart(2,'0')} · ${d.hours}시간 보호막`;if(reset)reset.style.cssText='width:100%;margin-top:7px'})}
+function renderGuild(){const{all,s,gi}=daily(),d=guild[selectedDay];$('#guildTitle').textContent=`${d.name} 길드전`;const box=$('#guildTasks');box.innerHTML='';if(!d.tasks.length){box.innerHTML='<div class="small">일요일은 길드전이 없습니다.</div>';$('#guildProgress').textContent='-'}else{let done=0;d.tasks.forEach(t=>{const checked=!t.shield&&selectedDay===gi.day?!!s.guild[t.id]:false;if(checked)done++;const row=document.createElement('div');row.className='task'+(checked?' done':'')+(t.link?' linked':'')+(t.shield?' shield-task':'');const mid=document.createElement('div');mid.className='grow';mid.innerHTML=`<div class="task-title">${t.n}</div>`;if(!t.shield){const cb=document.createElement('input');cb.type='checkbox';cb.checked=checked;cb.disabled=selectedDay!==gi.day;cb.addEventListener('change',()=>{if(t.link)sync(s,gi.day,t.id,cb.checked);else s.guild[t.id]=cb.checked;S.set('tkorDaily',all);renderGuild();renderHomework()});row.append(cb,mid)}else{row.append(mid)}if(t.shield&&selectedDay===gi.day){const temp=document.createElement('div');temp.innerHTML=shieldHTML();while(temp.firstChild)row.appendChild(temp.firstChild);setTimeout(()=>bindShield(row),0)}box.appendChild(row)});const checkCount=d.tasks.filter(t=>!t.shield).length;$('#guildProgress').textContent=selectedDay===gi.day?`${done}/${checkCount}`:`${checkCount}개`}$('#guildNote').textContent=d.note;const sb=$('#survivalRows');sb.innerHTML='';if(!d.surv.length){sb.innerHTML='<div class="small">등록된 서바이벌 배틀 일정이 없습니다.</div>';return}d.surv.forEach((r,i)=>{const key=`${selectedDay}-${i}`,checked=selectedDay===gi.day?!!s.surv[key]:false,row=document.createElement('label');row.className='surv'+(r[2]?' overlap':'')+(selectedDay===gi.day&&i===currentSlot()?' current':'')+(checked?' done':'');const tm=document.createElement('div');tm.className='stime';tm.textContent=r[0];const nm=document.createElement('div');nm.innerHTML=`<strong>${r[1]}</strong>${r[2]?'':''}`;const cb=document.createElement('input');cb.type='checkbox';cb.checked=checked;cb.disabled=selectedDay!==gi.day;cb.addEventListener('change',()=>{s.surv[key]=cb.checked;S.set('tkorDaily',all);renderGuild()});row.append(tm,nm,cb);sb.appendChild(row)});updateShield()}
+function dayNum(y,m,d){return Math.floor(Date.UTC(y,m,d)/86400000)}
+function dateKey(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
+function groups(){return S.get('tkorEventGroups',{})}
+function eventChecks(){return S.get('tkorEventChecks',{})}
+function cheese(c){const diff=dayNum(c.y,c.m,c.d)-dayNum(2026,8,20);return diff>=0&&diff%2===0}
+let tempEvents=[];
+function parseCsvRows(text){
+  const rows=[];let row=[],cur='',q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(ch==='"'){
+      if(q&&text[i+1]==='"'){cur+='"';i++}else q=!q;
+    }else if(ch===','&&!q){row.push(cur);cur=''}
+    else if((ch==='\n'||ch==='\r')&&!q){
+      if(ch==='\r'&&text[i+1]==='\n')i++;
+      row.push(cur);cur='';
+      if(row.some(v=>String(v).trim()!==''))rows.push(row);
+      row=[]
+    }else cur+=ch
+  }
+  row.push(cur);
+  if(row.some(v=>String(v).trim()!==''))rows.push(row);
+  return rows
+}
+function normalizeDate(v){
+  const s=String(v||'').trim(),m=s.match(/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})$/);
+  if(!m)return s;
+  return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`
+}
+function loadTempEvents(){
+  const url='https://docs.google.com/spreadsheets/d/e/2PACX-1vR5jJtUeRhlXd8-n2xeIZYDu_uKg81I-mQcShcr3UxYK_TNfMWbClA3-xm2OjpxqpmImTF5d9yCuara/pub?gid=1891611143&single=true&output=csv&t='+Date.now();
+  fetch(url,{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject())
+    .then(text=>{
+      const c=calInfo(),today=dateKey(c.y,c.m,c.d),rows=parseCsvRows(text);
+      tempEvents=rows.slice(1).map(r=>({
+        on:String(r[4]||'').trim().toUpperCase()==='ON',
+        date:normalizeDate(r[5]),
+        time:String(r[6]||'').trim(),
+        name:String(r[7]||'').trim()
+      })).filter(x=>x.on&&x.date===today&&/^\d{1,2}:\d{2}$/.test(x.time)&&x.name)
+        .map(x=>({time:x.time.padStart(5,'0'),name:x.name,sub:'오늘만 추가 일정',temp:true}));
+      renderEvents()
+    }).catch(()=>{})
+}
+function currentEventGroupKeys(c){
+  const keys=['cheese-'+dateKey(c.y,c.m,c.d)];
+  if(c.day===5||c.day===6){
+    const f=new Date(Date.UTC(c.y,c.m,c.d-(c.day===6?1:0)));
+    keys.push('elixir-'+f.toISOString().slice(0,10));
+  }
+  if(c.day===0||c.day===1){
+    const sun=new Date(Date.UTC(c.y,c.m,c.d-(c.day===1?1:0)));
+    keys.push('crystal-'+sun.toISOString().slice(0,10));
+  }
+  return keys;
+}
+function events(){
+  const c=calInfo(),g=groups(),arr=[],today=dateKey(c.y,c.m,c.d);
+  if(cheese(c)&&!g['cheese-'+today]){
+    arr.push({time:'19:00',name:'치즈',group:'cheese-'+today,sub:'19:00 / 22:00 중 1회'});
+    arr.push({time:'22:00',name:'치즈',group:'cheese-'+today,sub:'19:00 / 22:00 중 1회'})
+  }
+  if(c.day===2)arr.push({time:'20:30',name:'좀비포위전'});
+  if(c.day===5)arr.push({time:'20:45',name:'좀비포위전'});
+  if(c.day===5||c.day===6){
+    const f=new Date(Date.UTC(c.y,c.m,c.d-(c.day===6?1:0))),k='elixir-'+f.toISOString().slice(0,10);
+    if(!g[k])arr.push(c.day===5?{time:'20:00',name:'비약쟁탈전 A팀',group:k,sub:'금·토 중 1회'}:{time:'10:00',name:'비약쟁탈전 B팀',group:k,sub:'금·토 중 1회'})
+  }
+  if(c.day===5)arr.push({time:'23:00',name:'왕성쟁탈전'});
+  if(c.day===6)arr.push({time:'23:00',name:'서버전'});
+  if(c.day===0||c.day===1){
+    const sun=new Date(Date.UTC(c.y,c.m,c.d-(c.day===1?1:0))),k='crystal-'+sun.toISOString().slice(0,10);
+    if(!g[k]){
+      if(c.day===0){
+        arr.push({time:'13:00',name:'수정골짜기',group:k,sub:'일·월 4개 시간 중 1회'});
+        arr.push({time:'20:00',name:'수정골짜기',group:k,sub:'일·월 4개 시간 중 1회'})
+      }else{
+        arr.push({time:'05:00',name:'수정골짜기',group:k,sub:'일·월 4개 시간 중 1회'});
+        arr.push({time:'10:00',name:'수정골짜기',group:k,sub:'일·월 4개 시간 중 1회'})
+      }
+    }
+  }
+  arr.push(...tempEvents);
+  return arr.sort((a,b)=>a.time.localeCompare(b.time))
+}
+function resetTodayEvents(){
+  const c=calInfo(),g=groups(),checks=eventChecks(),today=dateKey(c.y,c.m,c.d);
+  currentEventGroupKeys(c).forEach(k=>delete g[k]);
+  Object.keys(checks).forEach(k=>{if(k.startsWith(today+'|'))delete checks[k]});
+  S.set('tkorEventGroups',g);
+  S.set('tkorEventChecks',checks);
+  renderEvents();
+}
+function renderEvents(){
+  const c=calInfo(),now=c.h*60+c.min,box=$('#todayEvents'),g=groups(),checks=eventChecks(),arr=events(),today=dateKey(c.y,c.m,c.d);
+  box.innerHTML='';
+  $('#eventCount').textContent=`${arr.length}개`;
+  if(!arr.length){box.innerHTML='<div class="small">오늘 남은 등록 일정이 없어요. 잘못 완료했다면 위의 ↺ 초기화를 눌러주세요.</div>';return}
+  let next=-1;
+  for(let i=0;i<arr.length;i++){
+    const[h,m]=arr[i].time.split(':').map(Number);
+    if(h*60+m>=now){next=i;break}
+  }
+  arr.forEach((e,i)=>{
+    const[h,m]=e.time.split(':').map(Number),eventKey=`${today}|${e.time}|${e.name}`,checked=!!checks[eventKey],row=document.createElement('label');
+    row.className='event'+(i===next?' next':'')+(h*60+m<now?' past':'')+(checked?' done':'');
+    const tm=document.createElement('div');tm.className='time';tm.textContent=e.time;
+    const mid=document.createElement('div');mid.innerHTML=`<strong>${e.name}</strong>${e.sub?`<div class="sub">${e.sub}</div>`:''}`;
+    const cb=document.createElement('input');cb.type='checkbox';cb.checked=checked;
+    cb.addEventListener('change',()=>{
+      if(e.group&&cb.checked){
+        g[e.group]=true;
+        S.set('tkorEventGroups',g);
+      }else{
+        checks[eventKey]=cb.checked;
+        S.set('tkorEventChecks',checks);
+      }
+      renderEvents()
+    });
+    row.append(tm,mid,cb);box.appendChild(row)
+  })
+}
+$('#resetTodayEvents').addEventListener('click',resetTodayEvents);
+$('#goToday').addEventListener('click',()=>{selectedDay=gameInfo().day;renderDays();renderGuild()});
+renderHeader();renderHomework();renderEvents();renderDays();renderGuild();loadTempEvents();
+setInterval(()=>{renderHeader();renderEvents();updateShield()},1000);
+setInterval(loadTempEvents,60000)
+})();
+</script>
+
+<script>
+(function(){
+  const SHEET_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vR5jJtUeRhlXd8-n2xeIZYDu_uKg81I-mQcShcr3UxYK_TNfMWbClA3-xm2OjpxqpmImTF5d9yCuara/pub?gid=1891611143&single=true&output=csv';
+  const bar=document.getElementById('noticeBar');
+  const textEl=document.getElementById('noticeText');
+
+  function parseCsv(text){
+    const rows=[]; let row=[], cur='', q=false;
+    for(let i=0;i<text.length;i++){
+      const ch=text[i];
+      if(ch==='"'){
+        if(q && text[i+1]==='"'){cur+='"';i++;}
+        else q=!q;
+      }else if(ch===',' && !q){
+        row.push(cur); cur='';
+      }else if((ch==='\n' || ch==='\r') && !q){
+        if(ch==='\r' && text[i+1]==='\n') i++;
+        row.push(cur); cur='';
+        if(row.some(v=>v.trim()!=='')) rows.push(row);
+        row=[];
+      }else{
+        cur+=ch;
+      }
+    }
+    row.push(cur);
+    if(row.some(v=>v.trim()!=='')) rows.push(row);
+    return rows;
+  }
+
+  function seoulParts(){
+    const parts=new Intl.DateTimeFormat('en-CA',{
+      timeZone:'Asia/Seoul', year:'numeric', month:'2-digit',
+      day:'2-digit', hour:'2-digit', hourCycle:'h23'
+    }).formatToParts(new Date());
+    const get=t=>parts.find(p=>p.type===t)?.value || '';
+    return {
+      date:`${get('year')}-${get('month')}-${get('day')}`,
+      hour:Number(get('hour'))
+    };
+  }
+
+  function normalizeDate(v){
+    const s=(v||'').trim();
+    const m=s.match(/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})$/);
+    if(!m) return s;
+    return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+  }
+
+  function renderMessage(msg){
+    if(!msg){
+      bar.classList.add('show');
+      textEl.classList.add('paused');
+      textEl.textContent='📢 등록된 전광판 소식이 없습니다';
+      return;
+    }
+    const finalMsg='📢  ' + msg + '  ✨   ✦   🎉';
+    textEl.classList.remove('paused');
+    textEl.textContent=finalMsg + '   •   ' + finalMsg + '   •   ';
+    bar.classList.add('show');
+    requestAnimationFrame(()=>{
+      if(textEl.scrollWidth <= textEl.parentElement.clientWidth){
+        textEl.classList.add('paused');
+        textEl.textContent='📢  ' + msg;
+      }
+    });
+  }
+
+  fetch(SHEET_CSV+'&t='+Date.now(),{cache:'no-store'})
+    .then(r=>{if(!r.ok) throw new Error('sheet'); return r.text();})
+    .then(text=>{
+      const rows=parseCsv(text);
+      if(rows.length<2) return;
+      const now=seoulParts();
+      const messages=rows.slice(1)
+        .filter(r=>(r[0]||'').trim().toUpperCase()==='ON')
+        .filter(r=>normalizeDate(r[2])===now.date)
+        .map(r=>(r[1]||'').trim())
+        .filter(Boolean);
+      if(!messages.length){ renderMessage(''); return; }
+      const idx=now.hour % messages.length;
+      renderMessage(messages[idx]);
+    })
+    .catch(()=>{});
+})();
+</script>
+
+</body>
+</html>

@@ -23,12 +23,12 @@ h1{font-size:25px;margin:0;white-space:nowrap;grid-column:1;grid-row:2;min-width
 .notice-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;position:relative;z-index:1}
 .notice-badge{display:inline-flex;align-items:center;justify-content:center;padding:0 10px;min-height:26px;border-radius:999px;background:linear-gradient(90deg,#ffd45d,#f5b83e);color:#221607;font-size:11px;font-weight:900;letter-spacing:.4px;box-shadow:0 4px 12px rgba(243,195,79,.28)}
 .notice-stars{font-size:14px;letter-spacing:2px;opacity:.95}
-.notice-track{position:relative;z-index:1;border:1px solid rgba(108,129,171,.38);background:rgba(10,17,30,.42);border-radius:12px;padding:9px 0;overflow:hidden}
-.notice-marquee{display:inline-block;white-space:nowrap;padding-left:100%;font-size:16px;font-weight:900;line-height:1.3;color:#f6f8fc;text-shadow:0 0 10px rgba(255,214,102,.18);animation:marquee 18s linear infinite}
-.notice-marquee.paused{animation:none;padding-left:14px}
-@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.notice-track{position:relative;z-index:1;border:1px solid rgba(108,129,171,.38);background:rgba(10,17,30,.42);border-radius:12px;height:42px;overflow:hidden;display:flex;align-items:center}
+.notice-marquee{display:inline-block;white-space:nowrap;padding:0 14px;font-size:14px;font-family:"Pretendard Variable",Pretendard,"Noto Sans KR",system-ui,-apple-system,sans-serif;font-weight:700;letter-spacing:-.18px;line-height:1.35;color:#f6f8fc;text-shadow:0 0 10px rgba(255,214,102,.14);will-change:transform}.notice-marquee.flowing{animation:noticeMove var(--notice-duration,80s) linear infinite}.notice-marquee.paused{animation:none;transform:none}
+
+@keyframes noticeMove{0%{transform:translateX(var(--notice-from,-320px))}100%{transform:translateX(0)}}
 @keyframes shine{0%{transform:translateX(-25%) rotate(18deg)}100%{transform:translateX(240%) rotate(18deg)}}
-@media(max-width:520px){.header{padding:15px 14px;column-gap:8px;row-gap:7px}h1{font-size:22px}.clock{font-size:12px}.top-action{min-height:30px;padding:0 9px;font-size:11px;white-space:nowrap}.notice-shell{padding:10px 11px}.notice-badge{min-height:24px;font-size:10px;padding:0 8px}.notice-stars{font-size:12px}.notice-track{padding:8px 0}.notice-marquee{font-size:14px}}
+@media(max-width:520px){.header{padding:15px 14px;column-gap:8px;row-gap:7px}h1{font-size:22px}.clock{font-size:12px}.top-action{min-height:30px;padding:0 9px;font-size:11px;white-space:nowrap}.notice-shell{padding:10px 11px}.notice-badge{min-height:24px;font-size:10px;padding:0 8px}.notice-stars{font-size:12px}.notice-track{height:40px}.notice-marquee{font-size:13px}}
 
 </style>
 </head>
@@ -46,7 +46,7 @@ h1{font-size:25px;margin:0;white-space:nowrap;grid-column:1;grid-row:2;min-width
       <span class="notice-stars">✨ ✦ ✨</span>
     </div>
     <div class="notice-track">
-      <div class="notice-marquee paused" id="noticeText">📢 등록된 전광판 소식이 없습니다</div>
+      <div class="notice-marquee paused" id="noticeText">등록된 전광판 소식이 없습니다</div>
     </div>
   </div>
   <div class="grid-top">
@@ -95,21 +95,47 @@ function normalizeDate(v){
   if(!m)return s;
   return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`
 }
+function gvizText(cell){
+  if(!cell)return '';
+  if(cell.f!==undefined&&cell.f!==null)return String(cell.f);
+  if(cell.v!==undefined&&cell.v!==null)return String(cell.v);
+  return ''
+}
+function loadPublicRange(range,done){
+  const cb='tkorPub_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+  const s=document.createElement('script');
+  window[cb]=resp=>{
+    try{done(resp)}finally{
+      try{delete window[cb]}catch(e){window[cb]=undefined}
+      s.remove()
+    }
+  };
+  s.onerror=()=>{
+    try{delete window[cb]}catch(e){window[cb]=undefined}
+    s.remove()
+  };
+  s.src='https://docs.google.com/spreadsheets/d/1BOc66VJypBulVOXcXrs6K7GqubbE3rWicXT9ReoAols/gviz/tq?sheet='+
+    encodeURIComponent('공개데이터')+'&range='+encodeURIComponent(range)+
+    '&headers=0&tqx=responseHandler:'+encodeURIComponent(cb)+'&_='+Date.now();
+  document.head.appendChild(s)
+}
 function loadTempEvents(){
-  const url='https://docs.google.com/spreadsheets/d/e/2PACX-1vR5jJtUeRhlXd8-n2xeIZYDu_uKg81I-mQcShcr3UxYK_TNfMWbClA3-xm2OjpxqpmImTF5d9yCuara/pub?gid=1891611143&single=true&output=csv&t='+Date.now();
-  fetch(url,{cache:'no-store'})
-    .then(r=>r.ok?r.text():Promise.reject())
-    .then(text=>{
-      const c=calInfo(),today=dateKey(c.y,c.m,c.d),rows=parseCsvRows(text);
-      tempEvents=rows.slice(1).map(r=>({
-        on:String(r[4]||'').trim().toUpperCase()==='ON',
-        date:normalizeDate(r[5]),
-        time:String(r[6]||'').trim(),
-        name:String(r[7]||'').trim()
-      })).filter(x=>x.on&&x.date===today&&/^\d{1,2}:\d{2}$/.test(x.time)&&x.name)
+  loadPublicRange('C2:E1000',resp=>{
+    try{
+      const c=calInfo(),today=dateKey(c.y,c.m,c.d);
+      const rows=(resp&&resp.table&&resp.table.rows)||[];
+      tempEvents=rows.map(r=>{
+        const cells=r.c||[];
+        return{
+          name:gvizText(cells[0]).trim(),
+          date:normalizeDate(gvizText(cells[1])),
+          time:gvizText(cells[2]).trim()
+        }
+      }).filter(x=>x.date===today&&/^\d{1,2}:\d{2}$/.test(x.time)&&x.name)
         .map(x=>({time:x.time.padStart(5,'0'),name:x.name,sub:'오늘만 추가 일정',temp:true}));
       renderEvents()
-    }).catch(()=>{})
+    }catch(e){}
+  })
 }
 function currentEventGroupKeys(c){
   const keys=['cheese-'+dateKey(c.y,c.m,c.d)];
@@ -197,89 +223,91 @@ setInterval(loadTempEvents,60000)
 })();
 </script>
 
+
 <script>
 (function(){
-  const SHEET_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vR5jJtUeRhlXd8-n2xeIZYDu_uKg81I-mQcShcr3UxYK_TNfMWbClA3-xm2OjpxqpmImTF5d9yCuara/pub?gid=1891611143&single=true&output=csv';
-  const bar=document.getElementById('noticeBar');
   const textEl=document.getElementById('noticeText');
+  const track=textEl.parentElement;
 
-  function parseCsv(text){
-    const rows=[]; let row=[], cur='', q=false;
-    for(let i=0;i<text.length;i++){
-      const ch=text[i];
-      if(ch==='"'){
-        if(q && text[i+1]==='"'){cur+='"';i++;}
-        else q=!q;
-      }else if(ch===',' && !q){
-        row.push(cur); cur='';
-      }else if((ch==='\n' || ch==='\r') && !q){
-        if(ch==='\r' && text[i+1]==='\n') i++;
-        row.push(cur); cur='';
-        if(row.some(v=>v.trim()!=='')) rows.push(row);
-        row=[];
-      }else{
-        cur+=ch;
-      }
-    }
-    row.push(cur);
-    if(row.some(v=>v.trim()!=='')) rows.push(row);
-    return rows;
+  function cleanMessage(v){
+    return String(v||'').replace(/^\s*📢\s*/,'').trim();
   }
 
-  function seoulParts(){
-    const parts=new Intl.DateTimeFormat('en-CA',{
-      timeZone:'Asia/Seoul', year:'numeric', month:'2-digit',
-      day:'2-digit', hour:'2-digit', hourCycle:'h23'
-    }).formatToParts(new Date());
-    const get=t=>parts.find(p=>p.type===t)?.value || '';
-    return {
-      date:`${get('year')}-${get('month')}-${get('day')}`,
-      hour:Number(get('hour'))
-    };
-  }
+  function renderMessage(raw){
+    const msg=cleanMessage(raw);
 
-  function normalizeDate(v){
-    const s=(v||'').trim();
-    const m=s.match(/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})$/);
-    if(!m) return s;
-    return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
-  }
+    textEl.classList.remove('flowing');
+    textEl.classList.add('paused');
+    textEl.style.removeProperty('--notice-from');
+    textEl.style.removeProperty('--notice-duration');
 
-  function renderMessage(msg){
     if(!msg){
-      bar.classList.add('show');
-      textEl.classList.add('paused');
-      textEl.textContent='📢 등록된 전광판 소식이 없습니다';
+      textEl.textContent='등록된 전광판 소식이 없습니다';
       return;
     }
-    const finalMsg='📢  ' + msg + '  ✨   ✦   🎉';
-    textEl.classList.remove('paused');
-    textEl.textContent=finalMsg + '   •   ' + finalMsg + '   •   ';
-    bar.classList.add('show');
+
+    textEl.textContent=msg;
+
     requestAnimationFrame(()=>{
-      if(textEl.scrollWidth <= textEl.parentElement.clientWidth){
+      const available=track.clientWidth-28;
+      const textWidth=textEl.scrollWidth;
+
+      // 짧으면 그대로 고정
+      if(textWidth<=available){
         textEl.classList.add('paused');
-        textEl.textContent='📢  ' + msg;
+        return;
       }
+
+      // 길 때만 아주 천천히 왼쪽 -> 오른쪽
+      // 긴 문장의 끝부분부터 시작해 오른쪽으로 이동하면서 전체 문구가 지나가게 함.
+      const overflow=Math.max(0,textWidth-available);
+      const from=-(overflow+28);
+      const duration=Math.max(100,(overflow+track.clientWidth)/6);
+      textEl.style.setProperty('--notice-from',from+'px');
+      textEl.style.setProperty('--notice-duration',duration+'s');
+      textEl.classList.remove('paused');
+      textEl.classList.add('flowing');
     });
   }
 
-  fetch(SHEET_CSV+'&t='+Date.now(),{cache:'no-store'})
-    .then(r=>{if(!r.ok) throw new Error('sheet'); return r.text();})
-    .then(text=>{
-      const rows=parseCsv(text);
-      if(rows.length<2) return;
-      const now=seoulParts();
-      const messages=rows.slice(1)
-        .filter(r=>(r[0]||'').trim().toUpperCase()==='ON')
-        .filter(r=>normalizeDate(r[2])===now.date)
-        .map(r=>(r[1]||'').trim())
-        .filter(Boolean);
-      if(!messages.length){ renderMessage(''); return; }
-      const idx=now.hour % messages.length;
-      renderMessage(messages[idx]);
-    })
-    .catch(()=>{});
+  let lastBoardValue=null;
+
+  function loadBoard(){
+    const cb='tkorBoard_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+
+    window[cb]=resp=>{
+      try{
+        const rows=(resp&&resp.table&&resp.table.rows)||[];
+        const cell=rows[0]&&rows[0].c&&rows[0].c[0];
+        const value=cell ? String(cell.f ?? cell.v ?? '') : '';
+        if(value!==lastBoardValue){
+          lastBoardValue=value;
+          renderMessage(value);
+        }
+      }catch(e){
+        renderMessage('');
+      }finally{
+        try{delete window[cb]}catch(e){window[cb]=undefined}
+        s.remove();
+      }
+    };
+
+    s.onerror=()=>{
+      renderMessage('');
+      try{delete window[cb]}catch(e){window[cb]=undefined}
+      s.remove();
+    };
+
+    s.src='https://docs.google.com/spreadsheets/d/1BOc66VJypBulVOXcXrs6K7GqubbE3rWicXT9ReoAols/gviz/tq?sheet='+
+      encodeURIComponent('공개데이터')+'&range=A2:A2&headers=0&tqx=responseHandler:'+
+      encodeURIComponent(cb)+'&_='+Date.now();
+
+    document.head.appendChild(s);
+  }
+
+  loadBoard();
+  setInterval(loadBoard,60000);
 })();
 </script>
 
